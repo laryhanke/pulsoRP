@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PULSO RP — Encontro de Músicos · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,700&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --terra:    #C4521A;
+    --terra-dk: #8B3410;
+    --terra-lt: #E07848;
+    --ocre-lt:  #E8B84B;
+    --creme:    #F2E8D5;
+    --creme-dk: #D4C4A8;
+    --marrom:   #1E1008;
+    --marrom-md:#2C1A0E;
+    --marrom-lt:#4A2C18;
+    --border:   rgba(196,82,26,0.18);
+    --border-lt:rgba(196,82,26,0.32);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--marrom);
+    color: var(--creme);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    /* padding for bottom nav */
+    padding-bottom: calc(64px + var(--safe-bottom));
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: rgba(30,16,8,0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .topbar-logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    color: var(--creme);
+  }
+
+  .topbar-logo-text span { color: var(--terra); }
+
+  .topbar-cta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    background: var(--terra);
+    color: var(--creme);
+    text-decoration: none;
+    border-radius: 2px;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    height: calc(64px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    background: rgba(20,10,4,0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: stretch;
+  }
+
+  .bnav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: opacity 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    padding-bottom: 2px;
+  }
+
+  .bnav-item:active { opacity: 0.6; }
+
+  .bnav-item.active .bnav-icon { color: var(--terra); }
+  .bnav-item.active .bnav-label { color: var(--terra-lt); }
+
+  .bnav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: var(--terra);
+    border-radius: 0 0 2px 2px;
+  }
+
+  .bnav-icon {
+    font-size: 20px;
+    color: rgba(242,232,213,0.3);
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .bnav-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(242,232,213,0.25);
+    transition: color 0.2s;
+    line-height: 1;
+  }
+
+  /* ── PAGES ── */
+  .page {
+    display: none;
+    padding-top: 56px;
+    animation: pgIn 0.35s ease both;
+    min-height: 100vh;
+  }
+
+  .page.active { display: block; }
+
+  @keyframes pgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 40px 24px 48px;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .hero-glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 0% 80%, rgba(196,82,26,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 100% 10%, rgba(201,139,42,0.07) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-rings {
+    position: absolute;
+    right: -100px;
+    top: 30px;
+    width: 320px;
+    height: 320px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--terra);
+  }
+
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(76px, 22vw, 120px);
+    letter-spacing: -3px;
+    line-height: 0.86;
+    color: var(--creme);
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .hero-title .rp { color: var(--terra); }
+
+  .hero-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--ocre-lt);
+    margin-top: 14px;
+    position: relative;
+  }
+
+  .hero-rule {
+    width: 48px;
+    height: 2px;
+    background: var(--terra);
+    margin: 22px 0;
+    position: relative;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.5);
+    line-height: 1.65;
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .hero-location {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .hero-city {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--creme);
+    text-transform: uppercase;
+  }
+
+  .hero-year {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--terra-lt);
+    text-transform: uppercase;
+  }
+
+  .hero-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    background: var(--terra);
+    color: var(--creme);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat {
+    padding: 20px 12px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-n {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--terra);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .stat-l {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(242,232,213,0.25);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  /* Intro */
+  .intro-text {
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .intro-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--creme);
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  .intro-text p {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.45);
+    line-height: 1.75;
+    margin-bottom: 12px;
+  }
+
+  .intro-text p strong { color: var(--creme-dk); font-weight: 500; }
+
+  /* ── SECTION HEADER ── */
+  .sec-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--terra);
+  }
+
+  .sec-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 12vw, 64px);
+    letter-spacing: -1.5px;
+    color: var(--creme);
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .sec-title span { color: var(--terra); }
+
+  /* ── SCHEDULE ── */
+  .sched-list { padding: 0 24px; }
+
+  .sched-item {
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+
+  .sched-item:last-child { border-bottom: 1px solid var(--border); }
+
+  .sched-item.iv .s-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-style: normal;
+    font-size: 15px;
+    color: rgba(242,232,213,0.2);
+    font-weight: 500;
+  }
+
+  .sched-item.iv .s-type { color: rgba(242,232,213,0.12); }
+  .sched-item.iv .s-type::before { background: rgba(242,232,213,0.1); }
+
+  .sched-item.jam {
+    background: linear-gradient(to right, rgba(196,82,26,0.07), transparent);
+    margin: 0 -24px;
+    padding: 24px 24px;
+    border-top: 1px solid rgba(196,82,26,0.3) !important;
+  }
+
+  .sched-item.jam .s-title { color: var(--ocre-lt); }
+
+  .s-row1 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .s-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--terra);
+    line-height: 1;
+  }
+
+  .s-dur {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(242,232,213,0.2);
+    margin-top: 3px;
+  }
+
+  .s-format {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--terra-dk);
+    color: var(--terra-lt);
+  }
+
+  .s-type {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .s-type::before {
+    content: '';
+    width: 12px;
+    height: 1px;
+    background: var(--terra);
+    flex-shrink: 0;
+  }
+
+  .s-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--creme);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .s-speaker {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(242,232,213,0.35);
+    margin-bottom: 10px;
+  }
+
+  .s-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.3);
+    line-height: 1.6;
+  }
+
+  .s-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    color: rgba(242,232,213,0.2);
+  }
+
+  .sched-note {
+    padding: 20px 24px;
+    background: rgba(196,82,26,0.04);
+    border-top: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: rgba(242,232,213,0.2);
+    line-height: 1.7;
+  }
+
+  .sched-note strong { color: rgba(242,232,213,0.35); }
+
+  /* ── CONVIDADOS ── */
+  .conv-list { padding: 0; }
+
+  .conv-card {
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    transition: background 0.25s;
+  }
+
+  .conv-card:last-of-type { border-bottom: 1px solid var(--border); }
+
+  .conv-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid var(--terra-dk);
+    position: relative;
+  }
+
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .photo-ph {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--marrom-lt), var(--terra-dk));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-in {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: rgba(242,232,213,0.45);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .photo-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid rgba(196,82,26,0.25);
+  }
+
+  .conv-info {}
+
+  .conv-n {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    color: var(--terra-dk);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .conv-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--creme);
+    line-height: 1;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+
+  .conv-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--terra-lt);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .conv-role::before {
+    content: '';
+    width: 12px;
+    height: 1px;
+    background: var(--terra);
+    flex-shrink: 0;
+  }
+
+  .conv-bio {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.38);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .conv-sess {
+    padding: 12px 16px;
+    background: rgba(196,82,26,0.08);
+    border-left: 2px solid var(--terra-dk);
+  }
+
+  .conv-sess-l {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    margin-bottom: 4px;
+  }
+
+  .conv-sess-t {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(242,232,213,0.45);
+  }
+
+  .conv-tbd {
+    padding: 36px 24px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    border-style: dashed;
+    background: rgba(196,82,26,0.02);
+  }
+
+  /* ── PATROCINADORES ── */
+  .pat-intro {
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pat-intro h3 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--creme);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+
+  .pat-intro p {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.4);
+    line-height: 1.7;
+  }
+
+  .sponsor-card {
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .sponsor-card:last-of-type { border-bottom: 1px solid var(--border); }
+
+  .sponsor-logo-wrap {
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  .s-divider {
+    width: 36px;
+    height: 2px;
+    background: var(--terra-dk);
+  }
+
+  .s-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--creme);
+  }
+
+  .s-type2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    margin-top: 3px;
+  }
+
+  .s-desc2 {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.38);
+    line-height: 1.65;
+  }
+
+  .s-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terra-dk);
+    text-decoration: none;
+  }
+
+  .pat-cta {
+    padding: 28px 24px;
+    background: rgba(196,82,26,0.05);
+    border-top: 1px solid var(--border);
+  }
+
+  .pat-cta h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--creme);
+    margin-bottom: 6px;
+  }
+
+  .pat-cta p {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.35);
+    margin-bottom: 18px;
+  }
+
+  /* ── CONTATO ── */
+  .cont-wrap {
+    padding: 28px 24px;
+  }
+
+  .cont-wrap h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(44px, 14vw, 72px);
+    letter-spacing: -2px;
+    color: var(--creme);
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .cont-wrap h3 span { color: var(--terra); }
+
+  .cont-wrap .desc {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.4);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .cont-item {
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .cont-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    margin-bottom: 4px;
+  }
+
+  .cont-value {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--creme-dk);
+  }
+
+  .sympla-block {
+    margin-top: 24px;
+    padding: 22px 20px;
+    background: rgba(196,82,26,0.08);
+    border-left: 3px solid var(--terra);
+  }
+
+  .sympla-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terra-lt);
+    margin-bottom: 8px;
+  }
+
+  .sympla-block p {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.4);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .steps-section {
+    padding: 28px 24px 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .step-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .step-item:last-child { border-bottom: 1px solid var(--border); }
+
+  .step-n {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--terra);
+    padding-top: 2px;
+  }
+
+  .step-body strong {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--creme-dk);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .step-body p {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(242,232,213,0.3);
+    line-height: 1.5;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px;
+    background: var(--terra);
+    color: var(--creme);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s;
+  }
+
+  .btn-full:active { background: var(--terra-lt); }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(242,232,213,0.15);
+  }
+
+  .footer-logo span { color: rgba(196,82,26,0.4); }
+
+  .footer-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(242,232,213,0.1);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-logo" onclick="showPage('inicio')">
+    <svg width="24" height="14" viewBox="0 0 24 14" fill="none">
+      <path d="M0 7 Q2 2.5 4 7 Q6 11.5 8 7 Q10 2 12 7 Q14 12 16 7 Q18 2 20 7 Q22 11.5 24 7" stroke="#C4521A" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <div class="topbar-logo-text">PULSO <span>RP</span></div>
+  </div>
+  <a href="https://www.sympla.com.br" target="_blank" class="topbar-cta">Ingressos</a>
+</header>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bnav-item active" data-page="inicio" onclick="showPage('inicio',this)">
+    <div class="bnav-icon">⌂</div>
+    <div class="bnav-label">Início</div>
+  </div>
+  <div class="bnav-item" data-page="programacao" onclick="showPage('programacao',this)">
+    <div class="bnav-icon">◷</div>
+    <div class="bnav-label">Programa</div>
+  </div>
+  <div class="bnav-item" data-page="convidados" onclick="showPage('convidados',this)">
+    <div class="bnav-icon">♪</div>
+    <div class="bnav-label">Artistas</div>
+  </div>
+  <div class="bnav-item" data-page="patrocinadores" onclick="showPage('patrocinadores',this)">
+    <div class="bnav-icon">◈</div>
+    <div class="bnav-label">Parceiros</div>
+  </div>
+  <div class="bnav-item" data-page="contato" onclick="showPage('contato',this)">
+    <div class="bnav-icon">✉</div>
+    <div class="bnav-label">Contato</div>
+  </div>
+</nav>
+
+<!-- ══ INÍCIO ══ -->
+<div class="page active" id="page-inicio">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <svg class="hero-rings" viewBox="0 0 320 320" fill="none">
+      <circle cx="160" cy="160" r="150" stroke="#C4521A" stroke-width="1"/>
+      <circle cx="160" cy="160" r="115" stroke="#C4521A" stroke-width="1"/>
+      <circle cx="160" cy="160" r="80"  stroke="#C4521A" stroke-width="1"/>
+      <circle cx="160" cy="160" r="48"  stroke="#C4521A" stroke-width="1"/>
+      <circle cx="160" cy="160" r="20"  stroke="#C4521A" stroke-width="1"/>
+    </svg>
+
+    <div class="hero-tag">Encontro de Músicos · Edição 01</div>
+    <h1 class="hero-title">PULSO<br><span class="rp">RP</span></h1>
+    <div class="hero-tagline">onde a música vira ofício</div>
+    <div class="hero-rule"></div>
+    <p class="hero-desc">Um dia de palestras, workshops, bate-papos com músicos da estrada e jam session.</p>
+    <div class="hero-location">
+      <div class="hero-city">Ribeirão Preto</div>
+      <div class="hero-year">SP · 2026</div>
+    </div>
+    <a href="https://www.sympla.com.br" target="_blank" class="hero-btn">Garantir ingresso · Sympla ↗</a>
+  </section>
+
+  <div class="stats-row reveal">
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">Dia</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Sessões</div></div>
+    <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Artistas</div></div>
+    <div class="stat"><div class="stat-n">RP</div><div class="stat-l">SP, BR</div></div>
+  </div>
+
+  <div class="intro-text reveal">
+    <h2>"A conversa que todo músico precisava ter."</h2>
+    <p>O PULSO RP é uma imersão de um dia para músicos que querem ir além do palco. Aprenda com quem está na estrada, ouça histórias reais e entenda como funciona a cena musical por dentro.</p>
+    <p><strong>Composição, sax, produção, bastidores de grandes bandas, fabricação de instrumentos</strong> — tudo no mesmo dia, com gente que vive isso de verdade.</p>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-logo">PULSO <span>RP</span></div>
+    <div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div>
+  </div>
+</div>
+
+<!-- ══ PROGRAMAÇÃO ══ -->
+<div class="page" id="page-programacao">
+  <div class="sec-header">
+    <div class="eyebrow">Grade do dia</div>
+    <div class="sec-title">PROGRA<span>MAÇÃO</span></div>
+  </div>
+
+  <div class="sched-list">
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">13h00</div><div class="s-dur">1h</div></div></div>
+      <div class="s-type">Abertura de portas</div>
+      <div class="s-title">Credenciamento + expositores</div>
+    </div>
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">14h00</div><div class="s-dur">15min</div></div></div>
+      <div class="s-type">Abertura oficial</div>
+      <div class="s-title">Boas-vindas ao PULSO RP</div>
+    </div>
+
+    <div class="sched-item reveal">
+      <div class="s-row1"><div><div class="s-time">14h15</div><div class="s-dur">1h</div></div><div class="s-format">Palestra</div></div>
+      <div class="s-type">Composição · Escrita</div>
+      <div class="s-title">"Música, palavra e composição"</div>
+      <div class="s-speaker">Beto Martins</div>
+      <div class="s-desc">A interseção entre a palavra escrita e a música composta. Beto abre seu processo criativo.</div>
+      <div class="s-tags"><span class="tag">Composição</span><span class="tag">Processo criativo</span></div>
+    </div>
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">15h15</div><div class="s-dur">15min</div></div></div>
+      <div class="s-type">Intervalo</div>
+      <div class="s-title">Coffee break</div>
+    </div>
+
+    <div class="sched-item reveal">
+      <div class="s-row1"><div><div class="s-time">15h30</div><div class="s-dur">1h</div></div><div class="s-format">Workshop</div></div>
+      <div class="s-type">Workshop prático</div>
+      <div class="s-title">"Workshop de Saxofone"</div>
+      <div class="s-speaker">Eric Almeida · Banda Eva</div>
+      <div class="s-desc">Técnica, sonoridade, improvisação e voz própria no instrumento. Para todos os níveis.</div>
+      <div class="s-tags"><span class="tag">Sax</span><span class="tag">Técnica</span><span class="tag">Improvisação</span></div>
+    </div>
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">16h30</div><div class="s-dur">15min</div></div></div>
+      <div class="s-type">Intervalo</div>
+      <div class="s-title">Coffee break</div>
+    </div>
+
+    <div class="sched-item reveal">
+      <div class="s-row1"><div><div class="s-time">16h45</div><div class="s-dur">1h</div></div><div class="s-format">Mesa redonda</div></div>
+      <div class="s-type">Bate-papo · 3 músicos</div>
+      <div class="s-title">"A Vida na Estrada"</div>
+      <div class="s-speaker">Gui Rezende · Esso Brumom · + 1 a confirmar</div>
+      <div class="s-desc">Rotina de shows, cachê, pressão de palco e bastidores de grandes bandas.</div>
+      <div class="s-tags"><span class="tag">Bastidores</span><span class="tag">Carreira</span></div>
+    </div>
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">17h45</div><div class="s-dur">30min</div></div></div>
+      <div class="s-type">Intervalo</div>
+      <div class="s-title">Coffee + expositores</div>
+    </div>
+
+    <div class="sched-item reveal">
+      <div class="s-row1"><div><div class="s-time">18h15</div><div class="s-dur">1h</div></div><div class="s-format">Demo</div></div>
+      <div class="s-type">Mercado de instrumentos</div>
+      <div class="s-title">"Fabricação de pratos"</div>
+      <div class="s-speaker">Chico · Domene Cymbals</div>
+      <div class="s-desc">Do metal bruto ao cymbal B20 perfeito. Fabricação artesanal 100% nacional.</div>
+      <div class="s-tags"><span class="tag">Percussão</span><span class="tag">Gear</span></div>
+    </div>
+
+    <div class="sched-item reveal">
+      <div class="s-row1"><div><div class="s-time">19h15</div><div class="s-dur">1h</div></div><div class="s-format">Palestra</div></div>
+      <div class="s-type">Conteúdo · Digital</div>
+      <div class="s-title">"Gravação de conteúdo"</div>
+      <div class="s-speaker">Leo · produção de conteúdo musical</div>
+      <div class="s-desc">Como usar o estúdio para criar presença digital relevante.</div>
+      <div class="s-tags"><span class="tag">Conteúdo</span><span class="tag">Estúdio</span></div>
+    </div>
+
+    <div class="sched-item iv reveal">
+      <div class="s-row1"><div><div class="s-time">20h15</div><div class="s-dur">15min</div></div></div>
+      <div class="s-type">Encerramento</div>
+      <div class="s-title">Agradecimentos</div>
+    </div>
+
+    <div class="sched-item jam reveal">
+      <div class="s-row1"><div><div class="s-time">20h30</div><div class="s-dur">até 22h</div></div><div class="s-format">Especial</div></div>
+      <div class="s-type">Encerramento especial</div>
+      <div class="s-title">"Jam Session aberta"</div>
+      <div class="s-speaker">Todos os convidados + público</div>
+      <div class="s-desc">Beto, Eric, Gui, Esso, Chico, Leo — e quem mais quiser subir ao palco.</div>
+    </div>
+
+    <div class="sched-item iv reveal" style="border-top:1px solid rgba(196,82,26,0.2);">
+      <div class="s-row1"><div><div class="s-time">22h00</div></div></div>
+      <div class="s-type">Fim do evento</div>
+    </div>
+
+  </div>
+
+  <div class="sched-note reveal"><strong>Grade em construção.</strong> Novas confirmações em breve. Garanta seu ingresso na Sympla.</div>
+  <div class="page-footer"><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">2026 · Ribeirão Preto, SP</div></div>
+</div>
+
+<!-- ══ CONVIDADOS ══ -->
+<div class="page" id="page-convidados">
+  <div class="sec-header">
+    <div class="eyebrow">Quem vai estar lá</div>
+    <div class="sec-title">CONVI<span>DADOS</span></div>
+  </div>
+
+  <div class="conv-list">
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">BM</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">01 — Confirmado</div>
+          <div class="conv-name">Beto Martins</div>
+          <div class="conv-role">Músico · Escritor · Compositor</div>
+        </div>
+      </div>
+      <p class="conv-bio">Músico de múltiplas linguagens, transita entre a composição, a escrita e a performance. Sua trajetória conecta a literatura à música popular brasileira de forma original e profunda.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">"Música, palavra e composição" — 14h15</div></div>
+    </div>
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">EA</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">02 — Confirmado</div>
+          <div class="conv-name">Eric Almeida</div>
+          <div class="conv-role">Saxofonista · Banda Eva</div>
+        </div>
+      </div>
+      <p class="conv-bio">Saxofonista de carreira consolidada e integrante da Banda Eva. Reconhecido pela musicalidade e pelo olhar didático, traz um workshop que mistura técnica e sensibilidade.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">Workshop de Saxofone — 15h30</div></div>
+    </div>
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">GR</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">03 — Confirmado</div>
+          <div class="conv-name">Gui Rezende</div>
+          <div class="conv-role">Baterista · Lauana Prado</div>
+        </div>
+      </div>
+      <p class="conv-bio">Na estrada com uma das cantoras mais quentes do sertanejo. Traz perspectivas únicas sobre profissionalismo e rotina de alto nível nas grandes turnês.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">"A Vida na Estrada" — Mesa redonda 16h45</div></div>
+    </div>
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">EB</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">04 — Confirmado</div>
+          <div class="conv-name">Esso Brumom</div>
+          <div class="conv-role">Baterista · Banda Eva</div>
+        </div>
+      </div>
+      <p class="conv-bio">Figura central da cena baiana e baterista da Banda Eva. Carrega no DNA a musicalidade do Recôncavo Baiano e anos nos maiores palcos do carnaval.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">"A Vida na Estrada" — Mesa redonda 16h45</div></div>
+    </div>
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">CH</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">05 — Confirmado</div>
+          <div class="conv-name">Chico</div>
+          <div class="conv-role">Fundador · Domene Cymbals</div>
+        </div>
+      </div>
+      <p class="conv-bio">À frente da Domene Cymbals, une metalurgia, acústica e arte na fabricação artesanal de pratos B20 — pioneiros na América Latina em fundição própria 100% nacional.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">"Fabricação de pratos" — 18h15</div></div>
+    </div>
+
+    <div class="conv-card reveal">
+      <div class="conv-top">
+        <div class="photo"><div class="photo-ph"><span class="photo-in">LE</span></div><div class="photo-ring"></div></div>
+        <div class="conv-info">
+          <div class="conv-n">06 — Confirmado</div>
+          <div class="conv-name">Leo</div>
+          <div class="conv-role">Conteúdo musical</div>
+        </div>
+      </div>
+      <p class="conv-bio">Especialista em transformar o trabalho do músico em presença digital relevante. Fala sobre estratégia, técnica e narrativa para o músico contemporâneo.</p>
+      <div class="conv-sess"><div class="conv-sess-l">Sessão</div><div class="conv-sess-t">"Gravação de conteúdo" — 19h15</div></div>
+    </div>
+
+    <div class="conv-tbd reveal">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:40px;color:rgba(196,82,26,0.15);letter-spacing:-1px;">+ 1</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(242,232,213,0.18);">Convidado a confirmar</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,232,213,0.1);">Mesa redonda · 3º músico</div>
+    </div>
+
+  </div>
+
+  <div class="page-footer"><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">2026 · Ribeirão Preto, SP</div></div>
+</div>
+
+<!-- ══ PATROCINADORES ══ -->
+<div class="page" id="page-patrocinadores">
+  <div class="sec-header">
+    <div class="eyebrow">Quem acredita no evento</div>
+    <div class="sec-title">PARCE<span>IROS</span></div>
+  </div>
+
+  <div class="pat-intro reveal">
+    <h3>"Marcas que vivem a música de verdade."</h3>
+    <p>Os parceiros do PULSO RP compartilham a mesma missão: fortalecer a cultura musical e apoiar quem faz isso acontecer.</p>
+  </div>
+
+  <!-- 100% Batera -->
+  <div class="sponsor-card reveal">
+    <div class="sponsor-logo-wrap">
+      <svg width="130" height="44" viewBox="0 0 130 44" fill="none">
+        <rect x="0" y="2" width="40" height="40" rx="4" fill="#C4521A"/>
+        <text x="20" y="18" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="11" fill="#F2E8D5">100%</text>
+        <text x="20" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="8" fill="#F2E8D5" letter-spacing="0.5">BATERA</text>
+        <text x="48" y="20" font-family="Arial Black,sans-serif" font-weight="900" font-size="18" fill="#F2E8D5" letter-spacing="-0.5">100%</text>
+        <text x="48" y="36" font-family="Arial,sans-serif" font-weight="600" font-size="11" fill="rgba(242,232,213,0.5)" letter-spacing="1.5">BATERA</text>
+      </svg>
+    </div>
+    <div class="s-divider"></div>
+    <div><div class="s-name">100% Batera</div><div class="s-type2">Loja especializada · Ribeirão Preto, SP</div></div>
+    <p class="s-desc2">Loja especializada em bateria nascida em 2015 em Ribeirão Preto. Referência nacional no mercado percussivo, acredita que a bateria muda vidas.</p>
+    <a href="https://www.cemporcentobatera.com.br" target="_blank" class="s-link">cemporcentobatera.com.br ↗</a>
+  </div>
+
+  <!-- Domene Cymbals -->
+  <div class="sponsor-card reveal">
+    <div class="sponsor-logo-wrap">
+      <svg width="130" height="44" viewBox="0 0 130 44" fill="none">
+        <ellipse cx="22" cy="24" rx="18" ry="6.5" stroke="#C4521A" stroke-width="1.5" fill="none"/>
+        <ellipse cx="22" cy="24" rx="11" ry="4" stroke="rgba(196,82,26,0.35)" stroke-width="1" fill="none"/>
+        <ellipse cx="22" cy="22" rx="4" ry="2.5" fill="#C4521A"/>
+        <text x="46" y="20" font-family="Arial Black,sans-serif" font-weight="900" font-size="15" fill="#F2E8D5" letter-spacing="-0.5">DOMENE</text>
+        <text x="46" y="35" font-family="Arial,sans-serif" font-weight="400" font-size="9" fill="rgba(242,232,213,0.45)" letter-spacing="2.5">CYMBALS</text>
+      </svg>
+    </div>
+    <div class="s-divider"></div>
+    <div><div class="s-name">Domene Cymbals</div><div class="s-type2">Fabricante artesanal · B20 nacional</div></div>
+    <p class="s-desc2">Pioneiros na América Latina em fundição própria de pratos B20 100% nacionais. Mais de uma década com o som como única métrica.</p>
+    <a href="https://www.instagram.com/domenecymbals" target="_blank" class="s-link">@domenecymbals ↗</a>
+  </div>
+
+  <!-- Essência Sonora -->
+  <div class="sponsor-card reveal">
+    <div class="sponsor-logo-wrap">
+      <svg width="130" height="44" viewBox="0 0 130 44" fill="none">
+        <rect x="2"  y="18" width="4" height="10" rx="2" fill="rgba(196,82,26,0.3)"/>
+        <rect x="9"  y="11" width="4" height="22" rx="2" fill="rgba(196,82,26,0.5)"/>
+        <rect x="16" y="4"  width="4" height="36" rx="2" fill="#C4521A"/>
+        <rect x="23" y="11" width="4" height="22" rx="2" fill="rgba(196,82,26,0.5)"/>
+        <rect x="30" y="18" width="4" height="10" rx="2" fill="rgba(196,82,26,0.3)"/>
+        <text x="42" y="20" font-family="Arial Black,sans-serif" font-weight="900" font-size="13" fill="#F2E8D5" letter-spacing="0.3">ESSÊNCIA</text>
+        <text x="42" y="35" font-family="Arial,sans-serif" font-weight="400" font-size="10" fill="rgba(242,232,213,0.45)" letter-spacing="1.8">SONORA</text>
+      </svg>
+    </div>
+    <div class="s-divider"></div>
+    <div><div class="s-name">Essência Sonora</div><div class="s-type2">Estúdio de gravação · Ribeirão Preto, SP</div></div>
+    <p class="s-desc2">Estúdio comprometido com qualidade sonora e com o desenvolvimento dos músicos da região. Parceiro na missão de fortalecer a cena de Ribeirão Preto.</p>
+    <a href="#" class="s-link">Essência Sonora ↗</a>
+  </div>
+
+  <div class="pat-cta reveal">
+    <h4>Quer fazer parte?</h4>
+    <p>Cotas de patrocínio disponíveis para marcas que acreditam na música.</p>
+    <button class="btn-full" onclick="showPage('contato',document.querySelector('[data-page=contato]'))">Falar sobre patrocínio</button>
+  </div>
+
+  <div class="page-footer"><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">2026 · Ribeirão Preto, SP</div></div>
+</div>
+
+<!-- ══ CONTATO ══ -->
+<div class="page" id="page-contato">
+  <div class="sec-header">
+    <div class="eyebrow">Fale com a organização</div>
+    <div class="sec-title">CON<span>TATO</span></div>
+  </div>
+
+  <div class="cont-wrap reveal">
+    <h3>VAMOS<br><span>CONVERSAR</span></h3>
+    <p class="desc">Quer fazer parte como patrocinador, parceiro ou palestrante? Quer ser avisado assim que os ingressos abrirem?</p>
+    <a href="https://www.sympla.com.br" target="_blank" class="btn-full">Ingressos · Sympla ↗</a>
+    <div style="margin-top:24px;">
+      <div class="cont-item"><div class="cont-label">E-mail</div><div class="cont-value">contato@pulso.rp</div></div>
+      <div class="cont-item"><div class="cont-label">Instagram</div><div class="cont-value">@pulso.rp</div></div>
+      <div class="cont-item"><div class="cont-label">Local</div><div class="cont-value">Ribeirão Preto, SP</div></div>
+      <div class="cont-item"><div class="cont-label">Data</div><div class="cont-value">2026 · A confirmar</div></div>
+    </div>
+    <div class="sympla-block">
+      <div class="sympla-label">Ingressos · Sympla</div>
+      <p>Os ingressos são vendidos exclusivamente pela Sympla. Cadastre-se para ser avisado quando abrir.</p>
+      <a href="https://www.sympla.com.br" target="_blank" class="btn-full">Acessar Sympla ↗</a>
+    </div>
+  </div>
+
+  <div class="steps-section reveal">
+    <div class="eyebrow" style="margin-bottom:16px;">Próximos passos</div>
+    <div class="step-item"><span class="step-n">01</span><div class="step-body"><strong>Data e local</strong><p>Escolha do espaço em Ribeirão Preto</p></div></div>
+    <div class="step-item"><span class="step-n">02</span><div class="step-body"><strong>3º músico da mesa</strong><p>Fechamento do último convidado</p></div></div>
+    <div class="step-item"><span class="step-n">03</span><div class="step-body"><strong>Cotas de patrocínio</strong><p>Primeiros parceiros com condições especiais</p></div></div>
+    <div class="step-item"><span class="step-n">04</span><div class="step-body"><strong>Ingressos na Sympla</strong><p>Pré-venda com condição especial</p></div></div>
+    <div class="step-item"><span class="step-n">05</span><div class="step-body"><strong>PULSO RP — Edição 01</strong><p>Um dia. Muitas histórias. Uma frequência só.</p></div></div>
+  </div>
+
+  <div class="page-footer"><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">2026 · Ribeirão Preto, SP</div></div>
+</div>
+
+<script>
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.bnav-item').forEach(t => t.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    if (page) {
+      page.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setTimeout(triggerReveals, 60);
+    }
+    const tab = (el && el.dataset) ? el : document.querySelector('[data-page="' + id + '"]');
+    if (tab && tab.classList) tab.classList.add('active');
+  }
+
+  function triggerReveals() {
+    const items = document.querySelectorAll('.page.active .reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+          const delay = Math.min(siblings.indexOf(entry.target), 4) * 70;
+          setTimeout(() => entry.target.classList.add('in'), delay);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    items.forEach(el => { el.classList.remove('in'); obs.observe(el); });
+  }
+
+  document.addEventListener('DOMContentLoaded', triggerReveals);
+  triggerReveals();
+</script>
+</body>
+</html>

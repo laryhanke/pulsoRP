@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PULSO RP — Encontro de Músicos · Ribeirão Preto 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--terra:#C4521A;--terra-dk:#8B3410;--terra-lt:#E07848;--ocre:#C98B2A;--ocre-lt:#E8B84B;--creme:#F2E8D5;--creme-dk:#D4C4A8;--marrom:#1E1008;--marrom-md:#2C1A0E;--marrom-lt:#4A2C18;--off:#F7F0E6;--verde:#2D4A3E;--border:rgba(196,82,26,0.14);--border-lt:rgba(196,82,26,0.28);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--marrom);color:var(--creme);font-family:'Barlow',sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;}
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.5;}
+
+  /* NAV */
+  #nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:stretch;height:60px;background:rgba(30,16,8,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .nav-logo{display:flex;align-items:center;gap:10px;padding:0 28px;border-right:1px solid var(--border);flex-shrink:0;cursor:pointer;}
+  .nav-logo-text{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;text-transform:uppercase;color:var(--creme);white-space:nowrap;}
+  .nav-logo-text span{color:var(--terra);}
+  .nav-tabs{display:flex;align-items:stretch;list-style:none;flex:1;overflow-x:auto;}
+  .nav-tabs::-webkit-scrollbar{display:none;}
+  .nav-tab{display:flex;align-items:center;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,232,213,0.35);cursor:pointer;border-right:1px solid var(--border);position:relative;transition:color 0.25s;white-space:nowrap;user-select:none;}
+  .nav-tab:hover{color:var(--creme-dk);}
+  .nav-tab.active{color:var(--terra-lt);}
+  .nav-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--terra);}
+  .nav-cta{display:flex;align-items:center;padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--terra);color:var(--creme);text-decoration:none;flex-shrink:0;transition:background 0.25s;white-space:nowrap;}
+  .nav-cta:hover{background:var(--terra-lt);}
+
+  /* PAGES */
+  .page{display:none;min-height:100vh;padding-top:60px;animation:pgIn 0.45s ease both;}
+  .page.active{display:block;}
+  @keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.6s ease,transform 0.6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* COMMONS */
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--terra-lt);display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .eyebrow::before{content:'';width:24px;height:1px;background:var(--terra);display:block;}
+  .page-header{padding:64px 52px 52px;border-bottom:1px solid var(--border);}
+  .page-header-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;}
+  .page-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(52px,9vw,104px);letter-spacing:-2px;color:var(--creme);line-height:0.88;text-transform:uppercase;margin-top:12px;}
+  .page-title span{color:var(--terra);}
+  .meta-line{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:rgba(242,232,213,0.3);text-transform:uppercase;margin-bottom:3px;text-align:right;}
+  footer{padding:28px 52px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:rgba(242,232,213,0.2);}
+  .footer-logo span{color:var(--terra-dk);}
+  .footer-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,232,213,0.15);}
+  .btn-p{display:inline-flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:15px 32px;background:var(--terra);color:var(--creme);text-decoration:none;transition:all 0.25s;cursor:pointer;border:none;}
+  .btn-p:hover{background:var(--terra-lt);transform:translateY(-2px);}
+  .btn-s{display:inline-flex;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:15px 32px;border:1px solid var(--border-lt);color:rgba(242,232,213,0.5);background:transparent;transition:all 0.25s;cursor:pointer;}
+  .btn-s:hover{border-color:var(--terra);color:var(--terra-lt);}
+
+  /* HERO */
+  .hero{min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:flex-end;padding:0 52px 64px;position:relative;overflow:hidden;}
+  .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 70%,rgba(196,82,26,0.12) 0%,transparent 55%),radial-gradient(ellipse 45% 50% at 85% 20%,rgba(201,139,42,0.07) 0%,transparent 50%);pointer-events:none;}
+  .hero-rings{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:500px;height:500px;pointer-events:none;opacity:0.05;}
+  .hero-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--terra-lt);display:flex;align-items:center;gap:14px;margin-bottom:18px;animation:fadeUp 0.8s 0.1s both;}
+  .hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--terra);}
+  .hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(80px,14vw,186px);letter-spacing:-4px;line-height:0.86;color:var(--creme);text-transform:uppercase;animation:fadeUp 0.8s 0.2s both;}
+  .hero-title .rp{color:var(--terra);}
+  .hero-tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,2.2vw,26px);font-weight:400;color:var(--ocre-lt);margin-top:16px;animation:fadeUp 0.8s 0.35s both;}
+  .hero-rule{width:60px;height:2px;background:var(--terra);margin:28px 0;animation:fadeIn 0.8s 0.45s both;}
+  .hero-bottom{display:flex;align-items:flex-end;justify-content:space-between;animation:fadeUp 0.8s 0.5s both;}
+  .hero-desc{max-width:480px;font-size:19px;font-weight:300;color:rgba(242,232,213,0.55);line-height:1.6;}
+  .hero-city{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:44px;letter-spacing:1px;color:var(--creme);line-height:1;text-transform:uppercase;text-align:right;}
+  .hero-loc{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,232,213,0.3);margin-top:5px;text-align:right;}
+  .hero-loc.oc{color:var(--terra-lt);}
+  .hero-actions{display:flex;gap:14px;margin-top:36px;animation:fadeUp 0.8s 0.65s both;}
+  .hero-divider{width:100%;height:1px;background:linear-gradient(to right,transparent,var(--terra-dk),transparent);margin-top:52px;animation:fadeIn 1.2s 0.8s both;}
+  .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+  .stat-block{padding:32px 44px;border-right:1px solid var(--border);}
+  .stat-block:last-child{border-right:none;}
+  .stat-n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:44px;color:var(--terra);line-height:1;letter-spacing:-1px;}
+  .stat-l{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,232,213,0.3);margin-top:5px;}
+  .intro-block{display:grid;grid-template-columns:1fr 1.9fr;border-bottom:1px solid var(--border);}
+  .intro-left{padding:64px 44px;border-right:1px solid var(--border);}
+  .intro-right{padding:64px 52px;}
+  .intro-right h2{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(28px,4vw,48px);font-weight:400;color:var(--creme);line-height:1.2;margin-bottom:24px;}
+  .intro-right p{font-size:18px;font-weight:300;color:rgba(242,232,213,0.5);line-height:1.75;margin-bottom:16px;}
+  .intro-right p strong{color:var(--creme-dk);font-weight:500;}
+
+  /* PROGRAMAÇÃO */
+  .schedule-list{padding:0 52px;}
+  .si{display:grid;grid-template-columns:80px 1fr 64px;gap:36px;padding:40px 0;border-top:1px solid var(--border);align-items:start;position:relative;}
+  .si:last-child{border-bottom:1px solid var(--border);}
+  .si::before{content:'';position:absolute;left:-52px;right:-52px;top:0;bottom:0;background:linear-gradient(to right,rgba(196,82,26,0.04),transparent 50%);opacity:0;transition:opacity 0.4s;pointer-events:none;}
+  .si:hover::before{opacity:1;}
+  .st{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;color:var(--terra);padding-top:3px;line-height:1.4;}
+  .sd{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:400;letter-spacing:1px;color:rgba(242,232,213,0.2);margin-top:4px;}
+  .sf{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--terra-dk);color:var(--terra-lt);margin-top:10px;}
+  .stype{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--terra-lt);margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+  .stype::before{content:'';width:16px;height:1px;background:var(--terra);flex-shrink:0;}
+  .stitle{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,3vw,36px);font-weight:400;color:var(--creme);line-height:1.15;margin-bottom:8px;}
+  .sspk{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(242,232,213,0.4);margin-bottom:16px;}
+  .sdesc{font-size:16px;font-weight:300;color:rgba(242,232,213,0.35);line-height:1.65;max-width:580px;}
+  .stags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;}
+  .tag{font-family:'Barlow Condensed',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:4px 11px;border:1px solid var(--border);color:rgba(242,232,213,0.25);}
+  .snum{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:72px;color:rgba(196,82,26,0.06);line-height:1;text-align:right;padding-top:2px;user-select:none;transition:color 0.3s;}
+  .si:hover .snum{color:rgba(196,82,26,0.1);}
+  .si.iv .stitle{font-family:'Barlow Condensed',sans-serif;font-style:normal;font-size:16px;font-weight:500;letter-spacing:1px;color:rgba(242,232,213,0.25);}
+  .si.iv .stype{color:rgba(242,232,213,0.15);}
+  .si.iv .stype::before{background:rgba(242,232,213,0.1);}
+  .si.jam{background:linear-gradient(to right,rgba(196,82,26,0.06),transparent 60%);border-top:1px solid rgba(196,82,26,0.3)!important;}
+  .si.jam .stitle{color:var(--ocre-lt);}
+  .snote{padding:28px 52px;background:rgba(196,82,26,0.04);border-top:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;color:rgba(242,232,213,0.25);line-height:1.7;}
+  .snote strong{color:rgba(242,232,213,0.4);}
+
+  /* CONVIDADOS */
+  .cg{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--border);}
+  .cc{padding:52px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden;transition:background 0.3s;}
+  .cc:nth-child(even){border-right:none;}
+  .cc.lr{border-bottom:none;}
+  .cc:hover{background:rgba(196,82,26,0.04);}
+  .cc-top{display:flex;align-items:center;gap:24px;margin-bottom:28px;}
+  .photo{width:80px;height:80px;border-radius:50%;flex-shrink:0;position:relative;overflow:hidden;border:2px solid var(--terra-dk);}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-ph{width:100%;height:100%;background:linear-gradient(135deg,var(--marrom-lt),var(--terra-dk));display:flex;align-items:center;justify-content:center;}
+  .photo-in{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:rgba(242,232,213,0.5);text-transform:uppercase;letter-spacing:1px;}
+  .photo-ring{position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(196,82,26,0.3);}
+  .cn{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;color:var(--terra-dk);text-transform:uppercase;margin-bottom:6px;}
+  .cname{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(26px,3vw,40px);color:var(--creme);line-height:1;letter-spacing:-0.5px;text-transform:uppercase;}
+  .crole{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:2.5px;color:var(--terra-lt);text-transform:uppercase;margin-top:5px;display:flex;align-items:center;gap:10px;}
+  .crole::before{content:'';width:14px;height:1px;background:var(--terra);flex-shrink:0;}
+  .cbio{font-size:16px;font-weight:300;color:rgba(242,232,213,0.4);line-height:1.65;margin-bottom:24px;}
+  .csess{padding:14px 18px;background:rgba(196,82,26,0.08);border-left:2px solid var(--terra-dk);}
+  .csl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--terra-lt);margin-bottom:5px;}
+  .cst{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:rgba(242,232,213,0.5);font-weight:400;}
+  .cc.tbd{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:280px;background:rgba(196,82,26,0.03);border-style:dashed;grid-column:span 2;}
+
+  /* PATROCINADORES */
+  .pi{padding:56px 52px;border-bottom:1px solid var(--border);}
+  .pi h3{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(24px,3.5vw,42px);font-weight:400;color:var(--creme);line-height:1.2;margin-bottom:16px;}
+  .pi p{font-size:17px;font-weight:300;color:rgba(242,232,213,0.45);line-height:1.75;max-width:680px;}
+  .sg{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);}
+  .sc{padding:52px 44px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:24px;transition:background 0.3s;}
+  .sc:nth-child(3n){border-right:none;}
+  .sc:hover{background:rgba(196,82,26,0.04);}
+  .slw{height:80px;display:flex;align-items:center;}
+  .sdv{width:40px;height:2px;background:var(--terra-dk);}
+  .sn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:1px;text-transform:uppercase;color:var(--creme);}
+  .stp{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--terra-lt);margin-top:4px;}
+  .sdsc{font-size:15px;font-weight:300;color:rgba(242,232,213,0.4);line-height:1.65;}
+  .slk{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--terra-dk);text-decoration:none;margin-top:auto;transition:color 0.2s;}
+  .slk:hover{color:var(--terra-lt);}
+  .scta{padding:40px 52px;background:rgba(196,82,26,0.05);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:32px;}
+  .scta h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:1px;text-transform:uppercase;color:var(--creme);margin-bottom:6px;}
+  .scta p{font-size:15px;font-weight:300;color:rgba(242,232,213,0.4);}
+
+  /* CONTATO */
+  .contg{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);min-height:calc(100vh - 190px);}
+  .cl{padding:64px 52px;border-right:1px solid var(--border);}
+  .cl h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(44px,7vw,84px);letter-spacing:-2px;color:var(--creme);line-height:0.9;text-transform:uppercase;margin-bottom:24px;}
+  .cl h3 span{color:var(--terra);}
+  .cl .desc{font-size:18px;font-weight:300;color:rgba(242,232,213,0.45);line-height:1.65;margin-bottom:36px;}
+  .ci{padding:20px 0;border-top:1px solid var(--border);}
+  .cil{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--terra-lt);margin-bottom:5px;}
+  .civ{font-size:18px;font-weight:300;color:var(--creme-dk);}
+  .syb{margin-top:32px;padding:28px 32px;background:rgba(196,82,26,0.08);border-left:3px solid var(--terra);}
+  .syl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--terra-lt);margin-bottom:10px;}
+  .syb p{font-size:16px;font-weight:300;color:rgba(242,232,213,0.45);line-height:1.6;margin-bottom:20px;}
+  .cr{padding:64px 52px;}
+  .sli{padding:24px 0;border-top:1px solid var(--border);display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:start;}
+  .sli:last-child{border-bottom:1px solid var(--border);}
+  .sln{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--terra);padding-top:2px;}
+  .slb strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;letter-spacing:0.5px;color:var(--creme-dk);margin-bottom:4px;text-transform:uppercase;}
+  .slb p{font-size:15px;font-weight:300;color:rgba(242,232,213,0.35);line-height:1.55;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  @media(max-width:900px){
+    .hero{padding:0 24px 52px;} .hero-bottom{flex-direction:column;gap:24px;} .hero-city,.hero-loc{text-align:left;}
+    .stats-strip{grid-template-columns:1fr 1fr;} .intro-block{grid-template-columns:1fr;}
+    .intro-left{border-right:none;border-bottom:1px solid var(--border);padding:40px 24px;} .intro-right{padding:40px 24px;}
+    .page-header{padding:48px 24px 40px;} .page-header-inner{flex-direction:column;align-items:flex-start;}
+    .schedule-list{padding:0 24px;} .si{grid-template-columns:64px 1fr;} .snum{display:none;}
+    .cg{grid-template-columns:1fr;} .cc{border-right:none;grid-column:1;} .cc.tbd{grid-column:1;}
+    .sg{grid-template-columns:1fr;} .sc{border-right:none;} .scta{flex-direction:column;align-items:flex-start;padding:32px 24px;}
+    .contg{grid-template-columns:1fr;} .cl{border-right:none;border-bottom:1px solid var(--border);padding:48px 24px;} .cr{padding:48px 24px;}
+    .snote{padding:24px;} .pi{padding:48px 24px;} footer{flex-direction:column;gap:6px;text-align:center;padding:20px 24px;}
+  }
+  @media(max-width:600px){.hero-title{letter-spacing:-2px;}.nav-cta{padding:0 14px;font-size:10px;}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-logo" onclick="showPage('inicio')">
+    <svg width="28" height="16" viewBox="0 0 28 16" fill="none"><path d="M0 8 Q2 3 4 8 Q6 13 8 8 Q10 2 12 8 Q14 14 16 8 Q18 2 20 8 Q22 13 24 8 Q26 3 28 8" stroke="#C4521A" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <div class="nav-logo-text">PULSO <span>RP</span></div>
+  </div>
+  <ul class="nav-tabs">
+    <li class="nav-tab active" data-page="inicio"         onclick="showPage('inicio',this)">Início</li>
+    <li class="nav-tab"        data-page="programacao"    onclick="showPage('programacao',this)">Programação</li>
+    <li class="nav-tab"        data-page="convidados"     onclick="showPage('convidados',this)">Convidados</li>
+    <li class="nav-tab"        data-page="patrocinadores" onclick="showPage('patrocinadores',this)">Patrocinadores</li>
+    <li class="nav-tab"        data-page="contato"        onclick="showPage('contato',this)">Contato</li>
+  </ul>
+  <a href="https://www.sympla.com.br" target="_blank" class="nav-cta">Ingressos · Sympla ↗</a>
+</nav>
+
+<!-- INÍCIO -->
+<div class="page active" id="page-inicio">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <svg class="hero-rings" viewBox="0 0 500 500" fill="none"><circle cx="250" cy="250" r="240" stroke="#C4521A" stroke-width="1"/><circle cx="250" cy="250" r="185" stroke="#C4521A" stroke-width="1"/><circle cx="250" cy="250" r="130" stroke="#C4521A" stroke-width="1"/><circle cx="250" cy="250" r="78" stroke="#C4521A" stroke-width="1"/><circle cx="250" cy="250" r="32" stroke="#C4521A" stroke-width="1"/></svg>
+    <div class="hero-eyebrow">Encontro de Músicos · Edição 01 · 2026</div>
+    <h1 class="hero-title">PULSO<br><span class="rp">RP</span></h1>
+    <div class="hero-tagline">onde a música vira ofício</div>
+    <div class="hero-rule"></div>
+    <div class="hero-bottom">
+      <p class="hero-desc">Um dia inteiro de palestras, workshops e bate-papos com músicos que vivem a estrada. Gestão de carreira, técnica, produção, bastidores e jam session.</p>
+      <div>
+        <div class="hero-city">Ribeirão Preto</div>
+        <div class="hero-loc oc">São Paulo · Brasil</div>
+        <div class="hero-loc">2026 · Data a confirmar</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.sympla.com.br" target="_blank" class="btn-p">Garantir ingresso · Sympla ↗</a>
+      <button class="btn-s" onclick="showPage('programacao',document.querySelector('[data-page=programacao]'))">Ver programação</button>
+    </div>
+    <div class="hero-divider"></div>
+  </section>
+  <div class="stats-strip">
+    <div class="stat-block reveal"><div class="stat-n">1</div><div class="stat-l">Dia de imersão</div></div>
+    <div class="stat-block reveal"><div class="stat-n">6</div><div class="stat-l">Sessões confirmadas</div></div>
+    <div class="stat-block reveal"><div class="stat-n">5+</div><div class="stat-l">Convidados</div></div>
+    <div class="stat-block reveal"><div class="stat-n">RP</div><div class="stat-l">Ribeirão Preto, SP</div></div>
+  </div>
+  <div class="intro-block">
+    <div class="intro-left reveal"><div class="eyebrow">O evento</div><p style="font-size:15px;font-weight:300;color:rgba(242,232,213,0.3);line-height:1.75;">Palestras. Workshop. Mesa redonda. Jam session. Tudo em um dia, para quem leva a música a sério.</p></div>
+    <div class="intro-right reveal">
+      <h2>"A conversa que todo músico precisava ter."</h2>
+      <p>O PULSO RP é uma imersão de um dia criada para músicos que querem ir além do palco. Uma oportunidade rara de aprender com quem está na estrada, ouvir histórias reais e entender como funciona a cena musical por dentro.</p>
+      <p><strong>Composição, sax, produção, bastidores de grandes bandas, fabricação de instrumentos</strong> — tudo no mesmo dia, com gente que vive isso de verdade.</p>
+    </div>
+  </div>
+  <footer><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div><div class="footer-tag">onde a música vira ofício_</div></footer>
+</div>
+
+<!-- PROGRAMAÇÃO -->
+<div class="page" id="page-programacao">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div><div class="eyebrow">Grade do dia</div><h2 class="page-title">PROGRA<span>MAÇÃO</span></h2></div>
+      <div><div class="meta-line">1 dia · 13h às 22h</div><div class="meta-line">Ribeirão Preto · 2026</div></div>
+    </div>
+  </div>
+  <div class="schedule-list">
+
+    <div class="si iv reveal"><div><div class="st">13h00</div><div class="sd">1h</div></div><div><div class="stype">Abertura de portas</div><div class="stitle">Credenciamento + expositores</div><div class="sdesc">Estandes de patrocinadores, networking e expositores abertos.</div></div><div class="snum">—</div></div>
+
+    <div class="si iv reveal"><div><div class="st">14h00</div><div class="sd">15min</div></div><div><div class="stype">Abertura oficial</div><div class="stitle">Boas-vindas ao PULSO RP</div><div class="sdesc">Palavra da organização e dos patrocinadores.</div></div><div class="snum">—</div></div>
+
+    <div class="si reveal"><div><div class="st">14h15</div><div class="sd">1h</div><div class="sf">Palestra</div></div><div><div class="stype">Composição · Escrita · Carreira</div><div class="stitle">"Música, palavra e composição"</div><div class="sspk">Beto Martins — músico, escritor, compositor</div><p class="sdesc">A interseção entre a palavra escrita e a música composta. Beto abre seu processo criativo e fala sobre como a escrita molda — e é moldada — pela música.</p><div class="stags"><span class="tag">Composição</span><span class="tag">Escrita</span><span class="tag">Processo criativo</span></div></div><div class="snum">01</div></div>
+
+    <div class="si iv reveal"><div><div class="st">15h15</div><div class="sd">15min</div></div><div><div class="stype">Intervalo</div><div class="stitle">Coffee break + networking</div></div><div class="snum">—</div></div>
+
+    <div class="si reveal"><div><div class="st">15h30</div><div class="sd">1h</div><div class="sf">Workshop</div></div><div><div class="stype">Workshop prático</div><div class="stitle">"Workshop de Saxofone"</div><div class="sspk">Eric Almeida — saxofonista · Banda Eva</div><p class="sdesc">Técnica, sonoridade, improvisação e como desenvolver uma voz própria no instrumento. Para saxofonistas de todos os níveis.</p><div class="stags"><span class="tag">Sax</span><span class="tag">Técnica</span><span class="tag">Improvisação</span></div></div><div class="snum">02</div></div>
+
+    <div class="si iv reveal"><div><div class="st">16h30</div><div class="sd">15min</div></div><div><div class="stype">Intervalo</div><div class="stitle">Coffee break + networking</div></div><div class="snum">—</div></div>
+
+    <div class="si reveal"><div><div class="st">16h45</div><div class="sd">1h</div><div class="sf">Mesa redonda</div></div><div><div class="stype">Bate-papo com 3 músicos</div><div class="stitle">"A Vida na Estrada"</div><div class="sspk">Gui Rezende (Lauana Prado) · Esso Brumom (Banda Eva) · + 1 a confirmar</div><p class="sdesc">Rotina de shows, cachê, pressão de palco, bastidores e life balance. Uma conversa honesta com quem vive a estrada todos os dias.</p><div class="stags"><span class="tag">Bastidores</span><span class="tag">Grandes bandas</span><span class="tag">Carreira</span></div></div><div class="snum">03</div></div>
+
+    <div class="si iv reveal"><div><div class="st">17h45</div><div class="sd">30min</div></div><div><div class="stype">Intervalo</div><div class="stitle">Coffee break + visita aos expositores</div></div><div class="snum">—</div></div>
+
+    <div class="si reveal"><div><div class="st">18h15</div><div class="sd">1h</div><div class="sf">Palestra + demo</div></div><div><div class="stype">Mercado de instrumentos</div><div class="stitle">"Fabricação e customização de pratos"</div><div class="sspk">Chico — Domene Cymbals</div><p class="sdesc">Do metal bruto ao cymbal perfeito. Como nascem os pratos B20, diferenças nacional x importado e o crescimento artesanal da percussão no Brasil.</p><div class="stags"><span class="tag">Percussão</span><span class="tag">Fabricação</span><span class="tag">Gear</span></div></div><div class="snum">04</div></div>
+
+    <div class="si reveal"><div><div class="st">19h15</div><div class="sd">1h</div><div class="sf">Palestra</div></div><div><div class="stype">Conteúdo · Estúdio · Digital</div><div class="stitle">"Gravação de conteúdo em estúdio"</div><div class="sspk">Leo — criação e produção de conteúdo musical</div><p class="sdesc">Como o músico contemporâneo usa o estúdio para criar conteúdo relevante. Estratégia, técnica e narrativa para transformar gravação em presença digital.</p><div class="stags"><span class="tag">Conteúdo</span><span class="tag">Estúdio</span><span class="tag">Digital</span></div></div><div class="snum">05</div></div>
+
+    <div class="si iv reveal"><div><div class="st">20h15</div><div class="sd">15min</div></div><div><div class="stype">Encerramento</div><div class="stitle">Agradecimentos + todos os convidados no palco</div></div><div class="snum">—</div></div>
+
+    <div class="si jam reveal"><div><div class="st">20h30</div><div class="sd">até 22h</div><div class="sf">Especial</div></div><div><div class="stype">Encerramento especial</div><div class="stitle">"Jam Session aberta"</div><div class="sspk">Todos os convidados + público no palco</div><p class="sdesc">Beto, Eric, Gui Rezende, Esso, Chico, Leo — e quem mais quiser subir. O melhor encerramento possível.</p></div><div class="snum">✦</div></div>
+
+    <div class="si iv reveal" style="border-top:1px solid rgba(196,82,26,0.25);"><div><div class="st">22h00</div></div><div><div class="stype">Encerramento</div><div class="stitle">Fim do evento</div></div><div class="snum">—</div></div>
+
+  </div>
+  <div class="snote reveal"><strong>Grade em construção.</strong> Novas confirmações em breve. Garanta seu ingresso na Sympla.</div>
+  <footer><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div><div class="footer-tag">onde a música vira ofício_</div></footer>
+</div>
+
+<!-- CONVIDADOS -->
+<div class="page" id="page-convidados">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div><div class="eyebrow">Quem vai estar lá</div><h2 class="page-title">CONVI<span>DADOS</span></h2></div>
+      <div><div class="meta-line">5 confirmados</div><div class="meta-line">+ 1 a definir</div></div>
+    </div>
+  </div>
+  <div class="cg">
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">BM</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">01 — Confirmado</div><div class="cname">Beto Martins</div><div class="crole">Músico · Escritor · Compositor</div></div>
+      </div>
+      <p class="cbio">Músico de múltiplas linguagens, Beto transita entre a composição, a escrita e a performance com naturalidade rara. Sua trajetória conecta a literatura à música popular brasileira de forma original e profunda.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">"Música, palavra e composição" — 14h15</div></div>
+    </div>
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">EA</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">02 — Confirmado</div><div class="cname">Eric Almeida</div><div class="crole">Saxofonista · Banda Eva</div></div>
+      </div>
+      <p class="cbio">Saxofonista de carreira consolidada e integrante da Banda Eva. Reconhecido pela musicalidade e pelo olhar didático sobre o instrumento, traz um workshop que mistura técnica e sensibilidade.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">Workshop de Saxofone — 15h30</div></div>
+    </div>
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">GR</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">03 — Confirmado</div><div class="cname">Gui Rezende</div><div class="crole">Baterista · Banda da Lauana Prado</div></div>
+      </div>
+      <p class="cbio">Na estrada com uma das cantoras mais quentes do sertanejo atual. Traz perspectivas únicas sobre profissionalismo, exigência técnica e rotina de alto nível nas grandes turnês.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">"A Vida na Estrada" — Mesa redonda 16h45</div></div>
+    </div>
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">EB</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">04 — Confirmado</div><div class="cname">Esso Brumom</div><div class="crole">Baterista · Banda Eva · Candeias, BA</div></div>
+      </div>
+      <p class="cbio">Figura central da cena musical baiana e baterista da Banda Eva. Carrega no DNA a musicalidade do Recôncavo Baiano e anos nos maiores palcos do carnaval e do axé music.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">"A Vida na Estrada" — Mesa redonda 16h45</div></div>
+    </div>
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">CH</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">05 — Confirmado</div><div class="cname">Chico</div><div class="crole">Fundador · Domene Cymbals</div></div>
+      </div>
+      <p class="cbio">À frente da Domene Cymbals, une metalurgia, acústica e arte na fabricação artesanal de pratos B20 — pioneiros e exclusivos na América Latina em fundição própria 100% nacional.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">"Fabricação e customização de pratos" — 18h15</div></div>
+    </div>
+
+    <div class="cc reveal">
+      <div class="cc-top">
+        <div class="photo">
+          <div class="photo-ph"><span class="photo-in">LE</span></div>
+          <div class="photo-ring"></div>
+        </div>
+        <div><div class="cn">06 — Confirmado</div><div class="cname">Leo</div><div class="crole">Produção de conteúdo musical</div></div>
+      </div>
+      <p class="cbio">Especialista em transformar o trabalho do músico em presença digital relevante. Fala sobre estratégia, técnica e narrativa para o músico contemporâneo usar o estúdio como ferramenta de conteúdo.</p>
+      <div class="csess"><div class="csl">Sessão</div><div class="cst">"Gravação de conteúdo em estúdio" — 19h15</div></div>
+    </div>
+
+    <div class="cc tbd reveal lr">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:48px;color:rgba(196,82,26,0.15);letter-spacing:-1px;margin-bottom:12px;">+ 1</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(242,232,213,0.2);margin-bottom:6px;">Convidado a confirmar</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,232,213,0.1);">Mesa redonda "A Vida na Estrada" · 3º músico</div>
+    </div>
+
+  </div>
+  <footer><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div><div class="footer-tag">onde a música vira ofício_</div></footer>
+</div>
+
+<!-- PATROCINADORES -->
+<div class="page" id="page-patrocinadores">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div><div class="eyebrow">Quem acredita no evento</div><h2 class="page-title">PATROCI<span>NADORES</span></h2></div>
+      <div><div class="meta-line">3 parceiros confirmados</div><div class="meta-line">Cotas disponíveis</div></div>
+    </div>
+  </div>
+
+  <div class="pi reveal">
+    <h3>"Marcas que vivem a música de verdade."</h3>
+    <p>Os patrocinadores do PULSO RP são parceiros que compartilham a mesma missão: fortalecer a cultura musical e apoiar quem faz isso acontecer. Obrigado a cada um deles por tornarem esse encontro possível.</p>
+  </div>
+
+  <div class="sg">
+
+    <!-- 100% Batera -->
+    <div class="sc reveal">
+      <div class="slw">
+        <svg width="148" height="52" viewBox="0 0 148 52" fill="none">
+          <rect x="0" y="4" width="44" height="44" rx="4" fill="#C4521A"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="12" fill="#F2E8D5">100%</text>
+          <text x="22" y="38" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="9" fill="#F2E8D5" letter-spacing="1">BATERA</text>
+          <text x="52" y="22" font-family="Arial Black,sans-serif" font-weight="900" font-size="20" fill="#F2E8D5" letter-spacing="-0.5">100%</text>
+          <text x="52" y="40" font-family="Arial,sans-serif" font-weight="600" font-size="12" fill="rgba(242,232,213,0.55)" letter-spacing="2">BATERA</text>
+        </svg>
+      </div>
+      <div class="sdv"></div>
+      <div><div class="sn">100% Batera</div><div class="stp">Loja especializada · Ribeirão Preto, SP</div></div>
+      <p class="sdsc">Loja especializada em bateria nascida em 2015 em Ribeirão Preto. Referência nacional no mercado percussivo, a 100% Batera leva a sério a filosofia de que a bateria muda vidas — e apoia quem vive isso.</p>
+      <a href="https://www.cemporcentobatera.com.br" target="_blank" class="slk">cemporcentobatera.com.br ↗</a>
+    </div>
+
+    <!-- Domene Cymbals -->
+    <div class="sc reveal">
+      <div class="slw">
+        <svg width="148" height="52" viewBox="0 0 148 52" fill="none">
+          <ellipse cx="24" cy="28" rx="20" ry="7" stroke="#C4521A" stroke-width="1.5" fill="none"/>
+          <ellipse cx="24" cy="28" rx="13" ry="4.5" stroke="rgba(196,82,26,0.35)" stroke-width="1" fill="none"/>
+          <ellipse cx="24" cy="26" rx="4.5" ry="3" fill="#C4521A"/>
+          <line x1="4" y1="28" x2="44" y2="28" stroke="rgba(196,82,26,0.15)" stroke-width="0.5"/>
+          <text x="52" y="24" font-family="Arial Black,sans-serif" font-weight="900" font-size="17" fill="#F2E8D5" letter-spacing="-0.5">DOMENE</text>
+          <text x="52" y="40" font-family="Arial,sans-serif" font-weight="400" font-size="10" fill="rgba(242,232,213,0.45)" letter-spacing="3">CYMBALS</text>
+        </svg>
+      </div>
+      <div class="sdv"></div>
+      <div><div class="sn">Domene Cymbals</div><div class="stp">Fabricante artesanal · B20 100% nacional</div></div>
+      <p class="sdsc">Pioneiros e exclusivos na América Latina em fundição própria de pratos B20 nacionais. Mais de uma década revolucionando o mercado de cymbals no Brasil — feitos à mão, com o som como única métrica.</p>
+      <a href="https://www.instagram.com/domenecymbals" target="_blank" class="slk">@domenecymbals ↗</a>
+    </div>
+
+    <!-- Essência Sonora -->
+    <div class="sc reveal">
+      <div class="slw">
+        <svg width="148" height="52" viewBox="0 0 148 52" fill="none">
+          <rect x="2"  y="20" width="5" height="12" rx="2.5" fill="rgba(196,82,26,0.3)"/>
+          <rect x="10" y="13" width="5" height="26" rx="2.5" fill="rgba(196,82,26,0.5)"/>
+          <rect x="18" y="6"  width="5" height="40" rx="2.5" fill="#C4521A"/>
+          <rect x="26" y="13" width="5" height="26" rx="2.5" fill="rgba(196,82,26,0.5)"/>
+          <rect x="34" y="20" width="5" height="12" rx="2.5" fill="rgba(196,82,26,0.3)"/>
+          <text x="48" y="23" font-family="Arial Black,sans-serif" font-weight="900" font-size="14" fill="#F2E8D5" letter-spacing="0.5">ESSÊNCIA</text>
+          <text x="48" y="40" font-family="Arial,sans-serif" font-weight="400" font-size="12" fill="rgba(242,232,213,0.45)" letter-spacing="2">SONORA</text>
+        </svg>
+      </div>
+      <div class="sdv"></div>
+      <div><div class="sn">Essência Sonora</div><div class="stp">Estúdio de gravação · Ribeirão Preto, SP</div></div>
+      <p class="sdsc">Estúdio de gravação comprometido com qualidade sonora e com o desenvolvimento dos músicos da região. Parceiro do PULSO RP na missão de fortalecer a cena musical de Ribeirão Preto.</p>
+      <a href="#" class="slk">Essência Sonora ↗</a>
+    </div>
+
+  </div>
+
+  <div class="scta reveal">
+    <div>
+      <h4>Quer fazer parte?</h4>
+      <p>Cotas de patrocínio disponíveis para marcas que acreditam na música. Fale com a organização.</p>
+    </div>
+    <button class="btn-p" onclick="showPage('contato',document.querySelector('[data-page=contato]'))">Falar sobre patrocínio</button>
+  </div>
+
+  <footer><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div><div class="footer-tag">onde a música vira ofício_</div></footer>
+</div>
+
+<!-- CONTATO -->
+<div class="page" id="page-contato">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div><div class="eyebrow">Fale com a organização</div><h2 class="page-title">CON<span>TATO</span></h2></div>
+      <div><div class="meta-line">Ingressos via Sympla</div></div>
+    </div>
+  </div>
+  <div class="contg">
+    <div class="cl reveal">
+      <h3>VAMOS<br><span>CONVERSAR</span></h3>
+      <p class="desc">Quer fazer parte do PULSO RP como patrocinador, parceiro ou palestrante? Quer ser avisado assim que os ingressos abrirem? Fale com a gente.</p>
+      <a href="https://www.sympla.com.br" target="_blank" class="btn-p">Ingressos · Sympla ↗</a>
+      <div style="margin-top:36px;">
+        <div class="ci"><div class="cil">E-mail</div><div class="civ">contato@pulso.rp</div></div>
+        <div class="ci"><div class="cil">Instagram</div><div class="civ">@pulso.rp</div></div>
+        <div class="ci"><div class="cil">Local</div><div class="civ">Ribeirão Preto, São Paulo</div></div>
+        <div class="ci"><div class="cil">Data</div><div class="civ">2026 · A confirmar</div></div>
+      </div>
+      <div class="syb">
+        <div class="syl">Ingressos · Sympla</div>
+        <p>Os ingressos são vendidos exclusivamente pela Sympla. Cadastre-se para ser avisado assim que as vendas abrirem.</p>
+        <a href="https://www.sympla.com.br" target="_blank" class="btn-p">Acessar Sympla ↗</a>
+      </div>
+    </div>
+    <div class="cr reveal">
+      <div class="eyebrow" style="margin-bottom:28px;">Próximos passos</div>
+      <ul style="list-style:none;">
+        <li class="sli"><span class="sln">01</span><div class="slb"><strong>Definição de data e local</strong><p>Escolha do espaço ideal em Ribeirão Preto</p></div></li>
+        <li class="sli"><span class="sln">02</span><div class="slb"><strong>Confirmação do 3º músico</strong><p>Fechamento do último convidado da mesa redonda</p></div></li>
+        <li class="sli"><span class="sln">03</span><div class="slb"><strong>Abertura das cotas de patrocínio</strong><p>Primeiros parceiros com condições especiais</p></div></li>
+        <li class="sli"><span class="sln">04</span><div class="slb"><strong>Lançamento dos ingressos na Sympla</strong><p>Pré-venda com condição especial para lista de espera</p></div></li>
+        <li class="sli"><span class="sln">05</span><div class="slb"><strong>PULSO RP — Edição 01</strong><p>Um dia. Muitas histórias. Uma frequência só.</p></div></li>
+      </ul>
+    </div>
+  </div>
+  <footer><div class="footer-logo">PULSO <span>RP</span></div><div class="footer-tag">Encontro de Músicos · 2026 · Ribeirão Preto, SP</div><div class="footer-tag">onde a música vira ofício_</div></footer>
+</div>
+
+<script>
+  function showPage(id,el){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    const page=document.getElementById('page-'+id);
+    if(page){page.classList.add('active');window.scrollTo({top:0,behavior:'instant'});setTimeout(triggerReveals,60);}
+    const tab=(el&&el.dataset)?el:document.querySelector('[data-page="'+id+'"]');
+    if(tab&&tab.classList)tab.classList.add('active');
+  }
+  function triggerReveals(){
+    const items=document.querySelectorAll('.page.active .reveal');
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const siblings=[...entry.target.parentElement.querySelectorAll('.reveal')];
+          const delay=Math.min(siblings.indexOf(entry.target),5)*65;
+          setTimeout(()=>entry.target.classList.add('in'),delay);
+          obs.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.06,rootMargin:'0px 0px -30px 0px'});
+    items.forEach(el=>{el.classList.remove('in');obs.observe(el);});
+  }
+  document.addEventListener('DOMContentLoaded',triggerReveals);
+  triggerReveals();
+</script>
+</body>
+</html>
